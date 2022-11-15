@@ -1,99 +1,54 @@
-@font-face {
-    font-family: "Tetris";
-    src: local("Tetris"),
-    url("../webfonts/Tetris.ttf")
-  }
-  * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-  }
-  .subtitle{
-      color: #fff;
-  }
-  body {
-      background-image: url("../assets/img/bg10.jpg");
-      background-position: center center;
-      background-repeat: no-repeat;
-      background-size: cover;
-      min-height: 100vh;
-  }
-  canvas{
-            box-shadow: 0 0 50px 10px rgb(178 129 255);
-      }
-  .wrapper{
-      display: flex;
-      text-align: center;
-      justify-content: center;
-  }
-  div.wrapper h1:nth-child(1) {
-    color: #fd971f;
-    text-shadow: 4px 4px #b56200;
-  }
-  div.wrapper h1:nth-child(2) {
-    color: #66d9ef;
-    text-shadow: 4px 4px #005a6b;
-  }
-  div.wrapper h1:nth-child(3) {
-    color: #28cf75;
-    text-shadow: 4px 4px #016630;
-  }
-  div.wrapper h1:nth-child(4) {
-    color: #f92672;
-    text-shadow: 4px 4px #660025;
-  }
-  div.wrapper h1:nth-child(5) {
-    color: #de38c8;
-    text-shadow: 4px 4px #68015a;
-  }
-  div.wrapper h1:nth-child(6) {
-    color: #a6e22e;
-    text-shadow: 4px 4px #446601;
-  }
-  .title{
-      font-family: Tetris;
-      font-weight: bold;
-      font-size: 4em;
-  }
-  #text-in{
-      font-size: 1.7em;
-  }
-  .btn:not(#reset){
-      border-radius: 50%;
-  }
-  @media only screen and (max-width: 600px) {
-      body{
-          background-image: url("../assets/img/resp.jpg");
-      }
-      canvas{
-          margin: 30px auto;
-      }
-      #puntaje{
-          margin-left: -60px;
-      }
-      #btnIzquierda,#btnAbajo,#btnDerecha,#btnRotar{
-          width: 70px;
-          height: 70px;
-          font-size: 2rem;
-      }
-      #btnIniciar,#btnPausar,#reset{
-          position: absolute;
-          top: -45px;
-      }
-      #reset{
-          right: 45px;
-      }
-    .subtitle{
-      color: #fff;
-      text-shadow: 4px 4px #000;
-    }
-    .title{
-      font-family: Tetris;
-      font-weight: bold;
-      font-size: 3em;
-    }
-    #text-in{
-        overflow: hidden;
-        display: none;
-    }
-  }
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+h1{
+    font-family: 'Press Start 2P', cursive;
+    font-size: 40px;
+}
+
+.titulo{
+    display: flex;
+    text-shadow: 0px -1px 10px #000000;
+}
+
+#letrat{
+    color: rgb(255, 80, 36);
+}
+
+#letrae{
+    color: rgb(87, 255, 15);
+}
+
+#letrat2{
+    color: rgb(255, 114, 6);
+}
+
+#letrar{
+    color: blueviolet;
+}
+
+#letrai{
+    color: aqua;
+}
+
+#letras{
+    color:rgb(255, 187, 0)
+}
+
+body{
+    background-image: url("../imgs/10.gif");
+    background-repeat: no-repeat;
+    background-size: cover 100%;
+    background-attachment: center ;
+    
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 2rem;
+}
