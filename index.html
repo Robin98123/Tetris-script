@@ -22,6 +22,7 @@
         <h1 id="letras">S</h1>
     </div>
     <script src="./scripts/Tablerotetris.js"></script>
+    <script src="./scripts/tetrimino.js"></script>
     <!--se hace un pequeño script dentro del html 
     por que se esta trabajando con una liberia por lo tanto 
     se define desde acá la parte del canvas donde se dibujrá 
@@ -39,12 +40,16 @@
     function setup(){
         createCanvas(900,600)
         tablero = new Tablero()
+        crearMapeoBaseTetriminos()
         tetromino = new Tetrimino()
-        resizeCanvas(tablero.ancho + 2 * margen_tablero,tablero.alto + 2 * margen_tablero)
+        resizeCanvas(
+            tablero.ancho + 2 * margen_tablero,
+            tablero.alto + 2 * margen_tablero + tablero.lado_celda
+            )
     }
 
     /* la función draw sirve para dar instrucciones especificas 
-    de dibujo como el color*/
+    de dibujo en el canvas como el color de fondo, dibujar el tablero, el tetromino*/
 
     function draw(){
         background("#17FCF9")
@@ -52,6 +57,10 @@
         tetromino.dibujar()
         keyEventsTetris()
     }
+
+    /*Esta funcion permite asignarle controles del teclado para mover la figura en las direcciones de izquierda
+    derecha y abajo, tambiens e uso un regulador de velocidad para que los tetrominos no se muevan tan rapido 
+    por el canvas ajustado en milisegundos*/
 
     function keyEventsTetris(){
         if(millis() - regulador_velocidad_teclas < 100 ){
@@ -68,45 +77,11 @@
             tetromino.moverAbajo()
         }
         if(keyIsDown(UP_ARROW)){
-            tetromino.moverArriba()
+            tetromino.girar()
         }
     }
+    
 
-    /*se define una clase para el tetrimino y se le dice 
-    que comience a dibujar desde la cordenada 0,0 del 
-    origen del tablero, no del canvas*/
-
-    class Tetrimino{
-        constructor(){
-            this.posicion = createVector(0, 0)
-        }
-
-        moverDerecha(){
-            this.posicion.x++
-        }
-
-        moverIzquierda(){
-            this.posicion.x--
-        }
-
-        moverAbajo(){
-            this.posicion.y++
-        }
-
-        moverArriba(){
-            this.posicion.y--
-        }
-        /*esta funcion se encarga del procesamiento del 
-        tetrimino*/
-
-        dibujar(){
-            push()
-            fill("red")
-            let coord = tablero.coordenada(this.posicion.x, this.posicion.y)
-            rect(coord.x,coord.y,tablero.lado_celda)
-            pop()
-        }
-    }
 
     </script>
 
