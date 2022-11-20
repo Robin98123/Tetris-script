@@ -12,7 +12,7 @@
             for (const pmino of base.mapa){
                 this.mapa.push(pmino.copy())
             }
-            this.posicion = createVector(int(tablero.columnas / 2), 0)
+            this.posicion = createVector(int(tablero.columnas / 2), -1);
         }
 
         moverDerecha(){
@@ -33,14 +33,24 @@
             this.posicion.y++
             if (this.movimientoErroneo){
                 this.moverArriba()
-                tablero.minosAlmacenados = this 
-                Tetrimino = new Tetrimino ()
+                if (tetrimino == this){
+                tablero.almacenarMino = this 
+                tetrimino = new Tetrimino ()
             }
+            return false
+            }
+            return true
         }
 
         moverArriba(){
             this.posicion.y--
         }
+
+        ponerEnElFondo(){
+            this.posicion = this.espectro.posicion
+            this.moverAbajo()
+        }
+
 
         girar (){
             for(const pmino of this.mapa){
@@ -61,8 +71,16 @@
 
         get movimientoErroneo(){
             let salioDelTablero = !this.estaDentroDelTablero
-            return salioDelTablero
+            return salioDelTablero || this.colisionConMinosAlmecenados
+        }
 
+        get colisionConMinosAlmecenados(){
+            for (const pmino of this.mapaTablero){
+                if (tablero.minosAlmacenados[pmino.x][pmino.y]){
+                    return true;
+                }
+            }
+            return false;
         }
 
         get estaDentroDelTablero(){
@@ -86,14 +104,14 @@
         get mapaTablero(){
             let retorno = []
             for (const pmino of this.mapa){
-                let copy = pmino.copy().add(this.posicion)
-                retorno.push(copy)
+                let copy = pmino.copy().add(this.posicion);
+                retorno.push(copy);
             }
-            return retorno
+            return retorno;
         }
 
         get mapaCanvas(){
-            let retorno = []
+            let retorno = [];
             for (const pmino of this.mapa){
                 let copy = pmino.copy().add(this.posicion)
                 retorno.push(tablero.coordenada(copy.x,copy.y))
@@ -108,6 +126,28 @@
             fill(this.color)
             stroke("#44A0FB")
             for (const pmino of this.mapaCanvas){
+                Tetrimino.dibujarMino(pmino)
+            }
+            pop();
+            if (tetrimino == this){
+                this.dibujarEspectro();
+            }
+        }
+
+        dibujarEspectro(){
+            this.espectro = new Tetrimino(this.nombre);
+            this.espectro.posicion = this.posicion.copy()
+            for(let i=0; i< this.mapa.length; i++){
+                this.espectro.mapa[i]= this.mapa[i].copy()
+            }
+            while (this.espectro.moverAbajo());
+            push()
+            drawingContext.globalAlpha = 0.3
+            this.espectro.dibujar();
+            pop()
+        }
+
+        static dibujarMino(pmino){
                 rect(pmino.x,pmino.y,tablero.lado_celda)
                 push()
                 noStroke()
@@ -123,9 +163,7 @@
                 vertex(pmino.x, pmino.y + tablero.lado_celda)
                 vertex(pmino.x + tablero.lado_celda, pmino.y + tablero.lado_celda)
                 endShape(CLOSE)
-                pop()
-            }
-            pop()
+                pop();
         }
     }    
     
@@ -142,7 +180,7 @@
                 createVector(-1,-1),
                 createVector(0,-1), 
                 createVector(1,0),    
-            ]
+            ],
         },
         "S":{
             color: "green",
@@ -151,7 +189,7 @@
                 createVector(1,-1),
                 createVector(0,-1),
                 createVector(-1,0),
-            ]
+            ],
         },
         "J":{
             color: "orange",
@@ -160,7 +198,7 @@
                 createVector(-1,-1),
                 createVector(-1,0),
                 createVector(1,0),
-            ]
+            ],
         },
         "L":{
             color: "blue",
@@ -169,7 +207,7 @@
                 createVector(-1,-1),
                 createVector(-1,0),
                 createVector(1,0),
-            ]
+            ],
         },
         "T":{
             color: "magenta",
@@ -178,7 +216,7 @@
                 createVector(-1,-1),
                 createVector(-1,0),
                 createVector(1,0),
-            ]
+            ],
         },
         "O":{
             color: "Yellow",
@@ -187,7 +225,7 @@
                 createVector(0,-1),
                 createVector(1,-1),
                 createVector(1,0),
-            ]
+            ],
         },
         "I":{
             color: "green",
@@ -196,8 +234,7 @@
                 createVector(-1,0),
                 createVector(1,0),
                 createVector(2,0),
-            ]
-        }
-
-    }
-    }
+            ],
+        },
+    };
+}

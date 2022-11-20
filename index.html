@@ -32,6 +32,20 @@
 
         const margen_tablero = 10
         let regulador_velocidad_teclas = 0
+        let regulador_de_caida = 0
+        let lineas_hechas = 0
+
+    /*se simula la gravedad para que las piezas 
+    caigan cada cierta cantidad de tiempo*/
+
+    setInterval(() => {
+            if (millis() - regulador_de_caida < 300) {
+                return
+            }
+            regulador_de_caida = millis()
+            tetrimino.moverAbajo()
+        }, 500);
+
 
     /* tanto la función setup como draw, con nativas de p5.js 
     esa es una de las ventajas de esta liberia, sirve para 
@@ -44,7 +58,7 @@
         tetromino = new Tetrimino()
         resizeCanvas(
             tablero.ancho + 2 * margen_tablero,
-            tablero.alto + 2 * margen_tablero + tablero.lado_celda
+            tablero.alto + 2 * margen_tablero + 2*tablero.lado_celda
             )
     }
 
@@ -52,37 +66,64 @@
     de dibujo en el canvas como el color de fondo, dibujar el tablero, el tetromino*/
 
     function draw(){
-        background("#17FCF9")
+        clear()
+        dibujarPuntaje()
         tablero.dibujar()
         tetromino.dibujar()
         keyEventsTetris()
     }
+
+    function dibujarPuntaje(){
+        push()
+        textSize(20)
+        strokeWeight(2)
+        stroke("black")
+        fill("white")
+        text(
+            "lineas: " + lineas_hechas,
+            tablero.posicion.x,
+            tablero.posicion.y - tablero.lado_celda / 2
+        )
+        pop()
+    }
+
+    let limite_regulador_velocidad_teclas = 100
 
     /*Esta funcion permite asignarle controles del teclado para mover la figura en las direcciones de izquierda
     derecha y abajo, tambiens e uso un regulador de velocidad para que los tetrominos no se muevan tan rapido 
     por el canvas ajustado en milisegundos*/
 
     function keyEventsTetris(){
-        if(millis() - regulador_velocidad_teclas < 100 ){
+        if(millis() - regulador_velocidad_teclas < limite_regulador_velocidad_teclas ){
             return
         }
+
+        limite_regulador_velocidad_teclas = 100
         regulador_velocidad_teclas = millis() 
+
         if(keyIsDown(RIGHT_ARROW)){
             tetromino.moverDerecha()
+            regulador_de_caida = millis()
         }
         if(keyIsDown(LEFT_ARROW)){
             tetromino.moverIzquierda()
+            regulador_de_caida = millis()
         }
         if(keyIsDown(DOWN_ARROW)){
             tetromino.moverAbajo()
+            regulador_de_caida = millis()
         }
         if(keyIsDown(UP_ARROW)){
+            limite_regulador_velocidad_teclas = 150
             tetromino.girar()
+            regulador_de_caida = millis()
+        }
+        if(keyIsDown(32)){
+            limite_regulador_velocidad_teclas = 200
+            tetromino.ponerEnElFondo()
+            regulador_de_caida = millis()
         }
     }
-    
-
-
     </script>
 
 </body>
