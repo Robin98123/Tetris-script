@@ -6,7 +6,7 @@
 class Tetrimino {
 
     /*Dentro de la clase se le asigna un array con el atributo random para que 
-    los tatrominos se generen aletoriamente*/
+    los tatrominos se generen aletoriamente retrornando un solo elemento contenido*/
 
     constructor(nombre = random(["Z", "S", "J", "L", "T", "O", "I"])) {
       this.nombre = nombre;
@@ -20,7 +20,8 @@ class Tetrimino {
     }
     
     /*a partir de aqui se asignan las funciones para que los tetrominos se 
-    puedan mover por el tablero*/
+    puedan mover por el tablero para que los tetrominos no se salgan del 
+    tablero al hacer movimientos en diferentes direcciones*/
 
     moverDerecha() {
       this.posición.x++;
@@ -72,11 +73,16 @@ class Tetrimino {
         pmino.set(-pmino.y, pmino.x);
       }
     }
+
+
   
     get movimientoErroneo() {
       let salióDelTablero = !this.estáDentroDelTablero;
       return salióDelTablero || this.colisiónConMinosAlmacenados;
     }
+
+    /* Esta funcion permite que los minos almacenados detecten que a sus alrrededor
+    hay otros minos y se ubiquen al rededor de ellos*/ 
   
     get colisiónConMinosAlmacenados() {
       for (const pmino of this.mapaTablero) {
@@ -150,6 +156,9 @@ class Tetrimino {
       pop()
     }
   
+
+    /* esta funcion permite dibujar una sombra y un brillo en el tetrimino*/
+
     static dibujarMino(pmino) {
       rect(pmino.x, pmino.y, tablero.lado_celda);
       push();

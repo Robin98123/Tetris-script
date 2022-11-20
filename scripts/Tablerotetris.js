@@ -13,23 +13,25 @@ class Tablero {
         MARGEN_TABLERO,
         MARGEN_TABLERO + 2*this.lado_celda
       );
-      /* 
-      minosAlmacenados es la variable que se encargará de representar los minos 
-      almacenados en el tablero
-      */
+/* se encargará de almecenar el tatrimino que se genera aletoriamente*/
       this.minosAlmacenados = [];
       for (let fila = 0; fila < this.filas; fila++) {
+        /*dentro del array vacio se generará cada tetromino */
         this.minosAlmacenados[fila] = [];
         for (let columna = 0; columna < this.columnas; columna++) {
           this.minosAlmacenados[fila].push("");
         }
       }
     }
+
+    /* el ciclo va a recorrer cada uno de los tetriminos
+    para que se vayan generando automaticamente tan pronto el tetrimino 
+    llegue a la parte de abajo del tablero creando un bucle infinito*/
   
     set almacenarMino(tetrimino) {
       for (const pmino of tetrimino.mapaTablero) {
         if (pmino.y < 0) {
-          //Juego términado
+          //Juego términado si la posicion del mino en y es menor que 0
           tablero = new Tablero();
           tetrimino = new Tetrimino();
           lineas_hechas = 0;
@@ -101,7 +103,7 @@ class Tablero {
       this.dibujarMinosAlmacenados();
     }
 
-    /*Se encarga de dibujar los minos */
+    /*dibuja los minos almacenados*/
   
     dibujarMinosAlmacenados() {
       push();
