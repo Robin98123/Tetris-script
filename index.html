@@ -1,18 +1,16 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tetrsi hecho en java script</title>
-
+    <title>Tetris hecho en  Javascript</title>
     <link rel="stylesheet" href="./styles/styles.css">
     <!--se importa libreria de p5.js para poder manejar mejor el canvas-->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.5.0/p5.min.js"></script>
-    <scrip src="./scripts/tetris.js"></scrip>
-</head>
-<body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.min.js"></script>
 
+</head>
+
+<body>
     <div class="titulo">
         <h1 id="letrat">T</h1>
         <h1 id="letrae">E</h1>
@@ -21,24 +19,26 @@
         <h1 id="letrai">I</h1>
         <h1 id="letras">S</h1>
     </div>
-    <script src="./scripts/Tablerotetris.js"></script>
-    <script src="./scripts/tetrimino.js"></script>
+
     <!--se hace un pequeño script dentro del html 
     por que se esta trabajando con una liberia por lo tanto 
     se define desde acá la parte del canvas donde se dibujrá 
     cada celda -->
 
+    <!--importamos cada script por separado, uno para los tetrominos
+    y otro para el tablero -->
+    <script src="./scripts/Tablerotetris.js"></script>
+    <script src="./scripts/tetrimino.js"></script>
+    
     <script>
-
-        const margen_tablero = 10
+        const MARGEN_TABLERO = 10
         let regulador_velocidad_teclas = 0
         let regulador_de_caida = 0
         let lineas_hechas = 0
 
-    /*se simula la gravedad para que las piezas 
-    caigan cada cierta cantidad de tiempo*/
-
-    setInterval(() => {
+        /*con el método set Interval se regula la 
+        caida de cada tetrimino*/
+        setInterval(() => {
             if (millis() - regulador_de_caida < 300) {
                 return
             }
@@ -50,81 +50,91 @@
     /* tanto la función setup como draw, con nativas de p5.js 
     esa es una de las ventajas de esta liberia, sirve para 
     ajustar las propiedades iniciales de los objetos y variables*/
-
-    function setup(){
-        createCanvas(900,600)
-        tablero = new Tablero()
-        crearMapeoBaseTetriminos()
-        tetromino = new Tetrimino()
-        resizeCanvas(
-            tablero.ancho + 2 * margen_tablero,
-            tablero.alto + 2 * margen_tablero + 2*tablero.lado_celda
+        function setup() {
+            createCanvas(900, 600) //crea un canvas con valor en px
+            /* estas varibles se nombran para todo el proyecto ya que se 
+            usan de manera global*/
+            tablero = new Tablero()
+            crearMapeoBaseTetriminos()
+            tetrimino = new Tetrimino()
+            resizeCanvas(
+                tablero.ancho + 2 * MARGEN_TABLERO,
+                tablero.alto + 2 * MARGEN_TABLERO + 2*tablero.lado_celda
             )
-    }
+        }
 
-    /* la función draw sirve para dar instrucciones especificas 
-    de dibujo en el canvas como el color de fondo, dibujar el tablero, el tetromino*/
+        /* 
+        La función draw es nativa de p5.js
+        y sirve para dar instrucciones precisas de dibujo sobre el canvas
+        */
+        function draw() {
+            clear()
+            dibuajarPuntaje()
+            tablero.dibujar()
+            tetrimino.dibujar()
+            keyEventsTetris()
+        }
 
-    function draw(){
-        clear()
-        dibujarPuntaje()
-        tablero.dibujar()
-        tetromino.dibujar()
-        keyEventsTetris()
-    }
+        function dibuajarPuntaje() {
+            push()
+            textSize(20)
+            strokeWeight(2)
+            stroke("black")
+            fill("white")
+            text(
+                "Líneas: " + lineas_hechas,
+                tablero.posición.x,
+                tablero.posición.y - tablero.lado_celda / 2
+            )
+            pop()
+        }
 
-    function dibujarPuntaje(){
-        push()
-        textSize(20)
-        strokeWeight(2)
-        stroke("black")
-        fill("white")
-        text(
-            "lineas: " + lineas_hechas,
-            tablero.posicion.x,
-            tablero.posicion.y - tablero.lado_celda / 2
-        )
-        pop()
-    }
+        let límite_regulador_velocidad_teclas = 100
 
-    let limite_regulador_velocidad_teclas = 100
-
-    /*Esta funcion permite asignarle controles del teclado para mover la figura en las direcciones de izquierda
+        /*Esta funcion permite asignarle controles del teclado para mover la figura en las direcciones de izquierda
     derecha y abajo, tambiens e uso un regulador de velocidad para que los tetrominos no se muevan tan rapido 
     por el canvas ajustado en milisegundos*/
 
-    function keyEventsTetris(){
-        if(millis() - regulador_velocidad_teclas < limite_regulador_velocidad_teclas ){
-            return
-        }
+        function keyEventsTetris() {
+            if (millis() - regulador_velocidad_teclas < límite_regulador_velocidad_teclas) {
+                return
+            }
+            límite_regulador_velocidad_teclas = 100
+            regulador_velocidad_teclas = millis()
 
-        limite_regulador_velocidad_teclas = 100
-        regulador_velocidad_teclas = millis() 
+            //Permitirá que el tetromino se mueva a la derecha con la flecha del teclado  ->
+            if (keyIsDown(RIGHT_ARROW)) {
+                tetrimino.moverDerecha()
+                regulador_de_caida = millis()
+            }
 
-        if(keyIsDown(RIGHT_ARROW)){
-            tetromino.moverDerecha()
-            regulador_de_caida = millis()
+            //Permitirá que el tetromino se mueva a la derecha con la flecha del teclado  <-
+            if (keyIsDown(LEFT_ARROW)) {
+                tetrimino.moverIzquierda()
+                regulador_de_caida = millis()
+            }
+
+            //Permitirá que el tetromino se mueva a la derecha con la flecha del teclado  hacia abajo
+            if (keyIsDown(DOWN_ARROW)) {
+                tetrimino.moverAbajo()
+                regulador_de_caida = millis()
+            }
+
+            //Permitirá que el tetromino cambie de dirección segun el usuario lo requiera rotando en los ejes
+            if (keyIsDown(UP_ARROW)) {
+                límite_regulador_velocidad_teclas = 150
+                tetrimino.girar()
+                regulador_de_caida = millis()
+            }
+
+            //hará que el tetromino vaya mas rapido si el usuario lo requiere hacia abajo
+            if (keyIsDown(32)) {
+                límite_regulador_velocidad_teclas = 200
+                tetrimino.ponerEnElFondo()
+                regulador_de_caida = millis()
+            }
         }
-        if(keyIsDown(LEFT_ARROW)){
-            tetromino.moverIzquierda()
-            regulador_de_caida = millis()
-        }
-        if(keyIsDown(DOWN_ARROW)){
-            tetromino.moverAbajo()
-            regulador_de_caida = millis()
-        }
-        if(keyIsDown(UP_ARROW)){
-            limite_regulador_velocidad_teclas = 150
-            tetromino.girar()
-            regulador_de_caida = millis()
-        }
-        if(keyIsDown(32)){
-            limite_regulador_velocidad_teclas = 200
-            tetromino.ponerEnElFondo()
-            regulador_de_caida = millis()
-        }
-    }
     </script>
-
 </body>
+
 </html>
